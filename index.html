@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Helikopter perspektiv — interaktiv tidslinje</title>
+<style>
+  :root{
+    --bg:#f7f7f7;
+    --panel:#ffffffcc;
+    --accent:#b83232;
+    --glass: rgba(255,255,255,0.9);
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  }
+  body{ margin:0; background:var(--bg); color:#222; }
+  .wrap{ display:flex; min-height:100vh; gap:18px; padding:18px; box-sizing:border-box; }
+  .stage{
+    flex:1 1 0;
+    position:relative;
+    border-radius:8px;
+    overflow:auto;
+    background:linear-gradient(180deg,#fff 0%, #fafafa 100%);
+    padding:12px;
+  }
+
+  /* Image container */
+  .tl-image{
+    position:relative;
+    width:100%;
+    max-width:1200px;
+    margin:0 auto;
+    border-radius:6px;
+    box-shadow:0 6px 18px rgba(0,0,0,0.12);
+    background:#eee;
+  }
+  .tl-image img{ display:block; width:100%; height:auto; border-radius:6px; }
+
+  /* Hotspot basic style */
+  .hotspot{
+    position:absolute;
+    transform: translate(-50%,-50%);
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none;
+  }
+  .hotspot .dot{
+    width:18px; height:18px; border-radius:50%;
+    box-shadow:0 2px 6px rgba(0,0,0,0.18);
+    border:3px solid rgba(255,255,255,0.6);
+  }
+  /* tooltip */
+  .hotspot .tooltip{
+    position:absolute;
+    min-width:160px;
+    max-width:240px;
+    background:var(--glass);
+    backdrop-filter: blur(4px);
+    border-radius:6px;
+    padding:8px 10px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.12);
+    font-size:13px;
+    display:none;
+    z-index:30;
+    transform:translate(-50%,-130%);
+    text-align:left;
+  }
+  .hotspot:hover .tooltip, .hotspot:focus .tooltip{
+    display:block;
+  }
+  .tooltip a{ color:#114a96; text-decoration:underline; }
+  .tooltip .title{ font-weight:600; margin-bottom:6px; }
+
+  /* color-coded dots */
+  .dot.gray{ background:#4a4a4a; }
+  .dot.red{ background:#8a1f1f; }
+  .dot.gold{ background:#b6862a; }
+  .dot.blue{ background:#2e6d97; }
+  .dot.teal{ background:#2d9a9a; }
+
+  /* side panel */
+  .panel{
+    width:360px;
+    max-width:40%;
+    min-width:260px;
+    background:var(--panel);
+    border-radius:8px;
+    padding:14px;
+    box-shadow:0 6px 20px rgba(0,0,0,0.08);
+    overflow:auto;
+  }
+  .panel h2{ margin:4px 0 10px 0; font-size:18px; }
+  .item{ margin:8px 0; padding:8px; border-radius:6px; background:#fff; box-shadow:0 2px 6px rgba(0,0,0,0.04); }
+  .item a{ color:#0a58a0; text-decoration:none; font-weight:600; }
+  .meta{ font-size:13px; color:#666; margin-top:6px; }
+  .portrait-row{ display:flex; gap:8px; margin-top:10px; }
+  .portrait{ width:90px; text-align:center; font-size:13px; }
+  .portrait img{ width:78px; height:78px; object-fit:cover; border-radius:50%; border:4px solid #fff; box-shadow:0 6px 14px rgba(0,0,0,0.12); display:block; margin:0 auto 6px; }
+  footer{ margin-top:12px; font-size:13px; color:#666; }
+
+  /* small helper for mobile */
+  @media (max-width:900px){
+    .wrap{ flex-direction:column; }
+    .panel{ width:100%; max-width:100%; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="stage" aria-label="Interaktiv tidslinje">
+    <div class="tl-image" id="timeline">
+      <!-- Put your original timeline image in same folder as this html and name it Slide1.JPG -->
+      <img src="Slide1.JPG" alt="Helikopter perspektiv - timeline" />
+      <!-- Hotspots: positions use percentages (top,left). Fine-tune these if needed. -->
+      <!-- Skånske Lov (ca. left) -->
+      <a class="hotspot" href="https://da.wikipedia.org/wiki/Sk%C3%A5nske_Lov" target="_blank" style="left:8%; top:36%;" title="Skånske Lov">
+        <span class="dot gray"></span>
+        <div class="tooltip"><div class="title">Skånske Lov (1202–1216)</div><div>Provinslov—se artikel på Wikipedia (da).</div></div>
+      </a>
+
+      <!-- Jernbyrd -->
+      <a class="hotspot" href="https://da.wikipedia.org/wiki/Jernbyrd" target="_blank" style="left:12%; top:46%;">
+        <span class="dot gray"></span>
+        <div class="tooltip"><div class="title">Jernbyrd / Jernbyrdsforordning</div><div>Ritualer for bevisførelse i middelalderen. Læs mere (da).</div></div>
+      </a>
+
+      <!-- Jyske Lov -->
+      <a class="hotspot" href="https://da.wikipedia.org/wiki/Jyske_Lov" target="_blank" style="left:18%; top:40%;">
+        <span class="dot gray"></span>
+        <div class="tooltip"><div class="title">Jyske Lov (1241)</div><div>En af de store landskabslove. Læs på Wikipedia (da).</div></div>
+      </a>
+
+      <!-- Luther / 1517 -->
+      <a class="hotspot" href="https://da.wikipedia.org/wiki/Martin_Luther" target="_blank" style="left:36%; top:24%;">
+        <span class="dot red"></span>
+        <div class="tooltip"><div class="title">Martin Luther — 95 teser (1517)</div><div>Luthers indflydelse og reformationen (da).</div></div>
+      </a>
+
+      <!-- Reformation / Reces 1536 -->
+      <a class="hotspot" href="https://da.wikipedia.org/wiki/Reformationen_i_Danmark" target="_blank" style="left:42%; top:30%;">
+        <span class="dot red"></span>
+        <div class="tooltip"><div class="title">Reformation / Københavnsk reces (1536)</div><div>Implementering af reformationen i Danmark 1536.</div></div>
+      </a>
+
+      <!-- Kalundborgsk reces 1576 -->
+      <a class="hotspot" href="https://da.wikipedia.org/wiki/Kalundborgsk_reces" target="_blank" style="left:50%; top:32%;">
+        <span class="dot red"></span>
+        <div class="tooltip"><div class="title">Kalundborgsk reces (1576)</div><div>Reces/forhandling — Wikipedia (da).</div></div>
+      </a>
+
+      <!-- Trolddom-Forordning 1617 -->
+      <a class="hotspot" href="https://da.wikipedia.org/wiki/Trolddom" target="_blank" style="left:58%; top:36%;">
+        <span class="dot gold"></span>
+        <div class="tooltip"><div class="title">Trolddomsforordning (1617)</div><div>Lovgivning om trolddom/hekseforfølgelser (da).</div></div>
+      </a>
+
+      <!-- Enevælden / Danske Lov -->
+      <a class="hotspot" href="https://da.wikipedia.org/wiki/Danske_Lov" target="_blank" style="left:66%; top:36%;">
+        <span class="dot gold"></span>
+        <div class="tooltip"><div class="title">Danske Lov (1683) / Enevælde</div><div>Kodificering af dansk lov; centralisering under enevælden.</div></div>
+      </a>
+
+      <!-- Juridisk eksamen / 1736 (approx) -->
+      <a class="hotspot" href="https://da.wikipedia.org/wiki/Jura" target="_blank" style="left:72%; top:36%;">
+        <span class="dot gold"></span>
+        <div class="tooltip"><div class="title">Juridisk uddannelse / eksamen</div><div>Historisk udvikling af juridisk uddannelse.</div></div>
+      </a>
+
+      <!-- Fransk revolution 1789 -->
+      <a class="hotspot" href="https://da.wikipedia.org/wiki/Den_franske_revolution" target="_blank" style="left:78%; top:34%;">
+        <span class="dot blue"></span>
+        <div class="tooltip"><div class="title">Fransk revolution (1789)</div><div>Revolutionens idéer og påvirkning af dansk ret.</div></div>
+      </a>
+
+      <!-- Grundloven 1849 -->
+      <a class="hotspot" href="https://da.wikipedia.org/wiki/Danmarks_Riges_Grundlov" target="_blank" style="left:86%; top:32%;">
+        <span class="dot blue"></span>
+        <div class="tooltip"><div class="title">Grundloven (1849)</div><div>Den første demokratiske forfatning i Danmark (1849).</div></div>
+      </a>
+
+      <!-- Straffeloven 1866 -->
+      <a class="hotspot" href="https://da.wikipedia.org/wiki/Straffeloven_af_1866" target="_blank" style="left:92%; top:36%;">
+        <span class="dot teal"></span>
+        <div class="tooltip"><div class="title">Straffeloven af 1866</div><div>Den borgerlige straffelov fra 1866 (afløst 1933/1930-lov).</div></div>
+      </a>
+
+      <!-- Straffeloven 1930 -->
+      <a class="hotspot" href="https://da.wikipedia.org/wiki/Straffeloven" target="_blank" style="left:97%; top:26%;">
+        <span class="dot teal"></span>
+        <div class="tooltip"><div class="title">Straffeloven (1930/1933)</div><div>Den nugældende danske straffelov indført 1930 (i kraft 1933).</div></div>
+      </a>
+
+      <!-- Concepts under Oplysning (Samfundspagt / Proportionalitet) - hotspots near portraits -->
+      <a class="hotspot" href="https://lex.dk/samfundspagt" target="_blank" style="left:66%; top:62%;">
+        <span class="dot red"></span>
+        <div class="tooltip"><div class="title">Samfundspagt (samfundspagten)</div><div>Begreb: social kontrakt — lex.dk.</div></div>
+      </a>
+
+      <a class="hotspot" href="https://lex.dk/proportionalitetsgrunds%C3%A6tning" target="_blank" style="left:72%; top:62%;">
+        <span class="dot red"></span>
+        <div class="tooltip"><div class="title">Proportionalitet</div><div>Proportionalitetsprincip for ret og strafferetspleje (lex.dk).</div></div>
+      </a>
+
+      <!-- Portrait hotspots (click portrait image) -->
+      <a class="hotspot" href="https://da.wikipedia.org/wiki/Charles_de_Secondat,_baron_de_Montesquieu" target="_blank" style="left:58%; top:72%;">
+        <span class="dot red" style="width:34px;height:34px;border-radius:6px;"></span>
+        <div class="tooltip"><div class="title">Montesquieu</div><div>Klik for biografi (da.wikipedia).</div></div>
+      </a>
+
+      <a class="hotspot" href="https://da.wikipedia.org/wiki/Cesare_Beccaria" target="_blank" style="left:66%; top:72%;">
+        <span class="dot red" style="width:34px;height:34px;border-radius:6px;"></span>
+        <div class="tooltip"><div class="title">Cesare Beccaria</div><div>Klik for biografi (da.wikipedia).</div></div>
+      </a>
+
+      <a class="hotspot" href="https://da.wikipedia.org/wiki/Jean-Jacques_Rousseau" target="_blank" style="left:74%; top:72%;">
+        <span class="dot red" style="width:34px;height:34px;border-radius:6px;"></span>
+        <div class="tooltip"><div class="title">Jean-Jacques Rousseau</div><div>Klik for biografi (da.wikipedia).</div></div>
+      </a>
+
+    </div>
+  </div>
+
+  <aside class="panel" aria-label="Kilder og forklaringer">
+    <h2>Elementer i billedet — links</h2>
+
+    <div class="item">
+      <a href="https://da.wikipedia.org/wiki/Sk%C3%A5nske_Lov" target="_blank">Skånske Lov (1202–1216)</a>
+      <div class="meta">Artikel på dansk Wikipedia. :contentReference[oaicite:0]{index=0}</div>
+    </div>
+
+    <div class="item">
+      <a href="https://da.wikipedia.org/wiki/Jernbyrd" target="_blank">Jernbyrd / jernbyrdsforordning</a>
+      <div class="meta">Wikipedia (da). :contentReference[oaicite:1]{index=1}</div>
+    </div>
+
+    <div class="item">
+      <a href="https://da.wikipedia.org/wiki/Jyske_Lov" target="_blank">Jyske Lov (1241)</a>
+      <div class="meta">Wikipedia (da). :contentReference[oaicite:2]{index=2}</div>
+    </div>
+
+    <div class="item">
+      <a href="https://da.wikipedia.org/wiki/Martin_Luther" target="_blank">Martin Luther — 95 teser (1517)</a>
+      <div class="meta">Biografi og reformation. :contentReference[oaicite:3]{index=3}</div>
+    </div>
+
+    <div class="item">
+      <a href="https://da.wikipedia.org/wiki/Reformationen_i_Danmark" target="_blank">Reformation i Danmark (1536)</a>
+      <div class="meta">Wikipedia (da). :contentReference[oaicite:4]{index=4}</div>
+    </div>
+
+    <div class="item">
+      <a href="https://da.wikipedia.org/wiki/Danske_Lov" target="_blank">Danske Lov (1683)</a>
+      <div class="meta">Wikipedia (da). :contentReference[oaicite:5]{index=5}</div>
+    </div>
+
+    <div class="item">
+      <a href="https://da.wikipedia.org/wiki/Danmarks_Riges_Grundlov" target="_blank">Grundloven (1849)</a>
+      <div class="meta">Wikipedia (da). :contentReference[oaicite:6]{index=6}</div>
+    </div>
+
+    <div class="item">
+      <a href="https://da.wikipedia.org/wiki/Straffeloven_af_1866" target="_blank">Straffeloven af 1866</a>
+      <div class="meta">Wikipedia (da) om 1866-loven. :contentReference[oaicite:7]{index=7}</div>
+    </div>
+
+    <div class="item">
+      <a href="https://da.wikipedia.org/wiki/Straffeloven" target="_blank">Straffeloven (1930/1933, nuværende)</a>
+      <div class="meta">Wikipedia (da) om straffelovene. :contentReference[oaicite:8]{index=8}</div>
+    </div>
+
+    <h2 style="margin-top:12px;">Oplysning – begreber og portrætter</h2>
+
+    <div class="item">
+      <a href="https://lex.dk/samfundspagt" target="_blank">Samfundspagt / samfundspagten</a>
+      <div class="meta">Lex.dk (artikel om samfundspagt). :contentReference[oaicite:9]{index=9}</div>
+    </div>
+
+    <div class="item">
+      <a href="https://lex.dk/proportionalitetsgrunds%C3%A6tning" target="_blank">Proportionalitetsgrundsætning / proportionalitet</a>
+      <div class="meta">Lex.dk (ombegrebet i retssammenhæng). :contentReference[oaicite:10]{index=10}</div>
+    </div>
+
+    <div class="portrait-row">
+      <div class="portrait">
+        <a href="https://da.wikipedia.org/wiki/Charles_de_Secondat,_baron_de_Montesquieu" target="_blank">
+          <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Charles_Montesquieu.jpg" alt="Montesquieu portrait" />
+          Montesquieu
+        </a>
+        <div class="meta">Biografi (da). :contentReference[oaicite:11]{index=11}</div>
+      </div>
+
+      <div class="portrait">
+        <a href="https://da.wikipedia.org/wiki/Cesare_Beccaria" target="_blank">
+          <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Cesare_Beccaria.jpg" alt="Cesare Beccaria portrait" />
+          Cesare Beccaria
+        </a>
+        <div class="meta">Biografi (da). :contentReference[oaicite:12]{index=12}</div>
+      </div>
+
+      <div class="portrait">
+        <a href="https://da.wikipedia.org/wiki/Jean-Jacques_Rousseau" target="_blank">
+          <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Jean-Jacques_Rousseau_%28painted_portrait%29.jpg" alt="Rousseau portrait" />
+          J.-J. Rousseau
+        </a>
+        <div class="meta">Biografi (da). :contentReference[oaicite:13]{index=13}</div>
+      </div>
+    </div>
+
+    <footer>
+      Tip: To adjust hotspot positions open the HTML and tweak the inline style `left: X%; top: Y%;` for each `.hotspot`.
+    </footer>
+  </aside>
+</div>
+</body>
+</html>
